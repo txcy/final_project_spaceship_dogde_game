@@ -4,9 +4,9 @@ import math
 from ball import Asteroid
 from paddle import Spaceship
 import time
-from my_event import Event
-import heapq
 from fuel import Fuel
+
+
 class Game:
     def __init__(self, num_asteroids):
         # ตั้งค่าหน้าจอ
@@ -25,73 +25,74 @@ class Game:
         except turtle.TurtleGraphicsError:
             print(f"Error: {self.background_image} not found.")
 
-        # สร้าง Spaceship
+        # สร้างยานและออบเจกต์
+        self.num_asteroids = num_asteroids
+        self.running = False
+
+    def setup_game(self):
+        """รีเซ็ตเกมใหม่ทั้งหมด"""
         self.spaceship = Spaceship(20, 0, -250, self.spaceship_image)
-
-        # สร้าง Asteroids
-        self.asteroids = [self.create_asteroid() for _ in range(num_asteroids)]
-
-        # สร้าง Fuel
+        self.asteroids = [self.create_asteroid() for _ in range(self.num_asteroids)]
         self.fuel = Fuel(15, random.randint(-380, 380), random.randint(-250, 250), "yellow")
-
-        # ตัวแปรสถานะเกม
-        self.running = True
         self.score = 0
-        self.fuel_score = 0  # จำนวนครั้งที่เก็บน้ำมัน
+        self.fuel_score = 0
         self.level = 1
+        self.running = True
 
-        # ตั้งค่าปุ่มควบคุม
+        # ลงทะเบียนปุ่มควบคุมยาน
         self.screen.listen()
         self.screen.onkeypress(lambda: self.spaceship.move("up"), "Up")
         self.screen.onkeypress(lambda: self.spaceship.move("down"), "Down")
         self.screen.onkeypress(lambda: self.spaceship.move("left"), "Left")
         self.screen.onkeypress(lambda: self.spaceship.move("right"), "Right")
 
-    def check_fuel_collision(self):
-        """ตรวจจับการชนของน้ำมันกับยาน"""
-        distance = math.sqrt((self.spaceship.x - self.fuel.x) ** 2 + (self.spaceship.y - self.fuel.y) ** 2)
-        if distance < self.spaceship.size + self.fuel.size:
-            self.fuel_score += 1  # เพิ่มคะแนนจากน้ำมันทีละ 1
-            self.fuel.relocate()  # สุ่มตำแหน่งใหม่ของน้ำมัน
+    def main_menu(self):
+        """แสดงเมนูหลัก"""
+        turtle.clear()
+        turtle.penup()
+        turtle.hideturtle()
+        turtle.color("white")
+        turtle.goto(0, 50)
+        turtle.write("Spaceship Dodge Game", align="center", font=("Arial", 24, "bold"))
+        turtle.goto(0, 0)
+        turtle.write("Press 'S' to Start or 'Q' to Quit", align="center", font=("Arial", 16, "bold"))
+        self.screen.listen()
+        self.screen.onkeypress(self.start_game, "s")
+        self.screen.onkeypress(self.quit_game, "q")
+        self.screen.update()
 
-    def check_collision(self):
-        """ตรวจสอบการชนระหว่างยานอวกาศกับอุกกาบาต"""
-        for asteroid in self.asteroids:
-            distance = math.sqrt((self.spaceship.x - asteroid.x) ** 2 + (self.spaceship.y - asteroid.y) ** 2)
-            if distance < self.spaceship.size + asteroid.size:
-                self.spaceship_explode()
-                return True  # มีการชน
-        return False  # ไม่มีการชน
+    def start_game(self):
+        """เริ่มเกมใหม่"""
+        self.setup_game()
+        self.run()
+
+    def quit_game(self):
+        """ออกจากเกม"""
+        self.screen.bye()
 
     def create_asteroid(self):
-        size = random.randint(10, 20)  # ขนาด
-        x = random.randint(-380, 380)  # ตำแหน่งแนวนอน
-        y = 300  # ตำแหน่งแนวตั้งเริ่มต้นด้านบน
-        vx = 0  # ไม่มีการเคลื่อนที่ในแนวนอน
-        vy = random.uniform(-2, -4)  # ความเร็วในแนวตั้ง
+        size = random.randint(10, 20)
+        x = random.randint(-380, 380)
+        y = 300
+        vx = 0
+        vy = random.uniform(-1.0, -1.5)  # ลดความเร็วให้ช้าลง
         color = random.choice(["gray", "darkgray", "lightgray"])
         return Asteroid(size, x, y, vx, vy, color)
 
-    def create_events(self):
-        """สร้างเหตุการณ์การชนทั้งหมด"""
-        for asteroid in self.asteroids:
-            # ตัวอย่างการสร้าง Event การชนกับ Spaceship
-            time_to_collision = calculate_time_to_collision(self.spaceship, asteroid)
-            event = Event(time_to_collision, self.spaceship, asteroid)
-            heapq.heappush(self.pq, event)  # เพิ่มใน Priority Queue
-
     def check_collision(self):
-        """ตรวจสอบการชนระหว่างยานอวกาศกับอุกกาบาต"""
         for asteroid in self.asteroids:
             distance = math.sqrt((self.spaceship.x - asteroid.x) ** 2 + (self.spaceship.y - asteroid.y) ** 2)
             if distance < self.spaceship.size + asteroid.size:
-                self.spaceship.turtle.hideturtle()  # ซ่อนยาน
-                self.running = False  # หยุดเกม
                 return True
         return False
 
+    def check_fuel_collision(self):
+        distance = math.sqrt((self.spaceship.x - self.fuel.x) ** 2 + (self.spaceship.y - self.fuel.y) ** 2)
+        if distance < self.spaceship.size + self.fuel.size:
+            self.fuel_score += 1
+            self.fuel.relocate()
+
     def display_score(self):
-        """แสดงคะแนนและระดับ"""
         turtle.penup()
         turtle.hideturtle()
         turtle.goto(-380, 260)
@@ -99,72 +100,90 @@ class Game:
         turtle.write(f"Score: {self.score}  Fuel Collected: {self.fuel_score}  Level: {self.level}",
                      font=("Arial", 16, "bold"))
 
-    def process_events(self):
-        """ประมวลผลเหตุการณ์"""
-        while self.running:
-            if not self.pq:
-                break
-            event = heapq.heappop(self.pq)  # ดึงเหตุการณ์ที่เร็วที่สุดออกมา
-            if not event.is_valid():
-                continue  # ข้ามเหตุการณ์ที่ไม่ถูกต้อง
-            self.handle_event(event)  # จัดการเหตุการณ์
+    def reset_game(self):
+        """รีเซ็ตสถานะเกมทั้งหมดเพื่อเริ่มใหม่"""
+        turtle.clear()  # ล้างหน้าจอทั้งหมด
+        self.spaceship.turtle.hideturtle()  # ซ่อนยานเก่าที่ค้างอยู่
+        self.spaceship = Spaceship(20, 0, -250, self.spaceship_image)  # สร้างยานใหม่
+
+        # สร้าง Asteroids ใหม่
+        self.asteroids = [self.create_asteroid() for _ in range(10)]
+
+        # สร้าง Fuel ใหม่
+        self.fuel = Fuel(15, random.randint(-380, 380), random.randint(-250, 250), "yellow")
+
+        # รีเซ็ตสถานะเกม
+        self.score = 0
+        self.fuel_score = 0
+        self.level = 1
+        self.running = True
+        self.run()  # เริ่มเกมใหม่
 
     def game_over(self):
-        """แสดงข้อความจบเกม"""
-        turtle.clear()  # ล้างหน้าจอเพื่อแสดงเฉพาะข้อความจบเกม
+        """แสดงข้อความจบเกมพร้อมสรุปคะแนน"""
+        turtle.clear()
         turtle.penup()
         turtle.hideturtle()
         turtle.color("red")
-        turtle.goto(0, 0)
+
+        # แสดงข้อความ GAME OVER
+        turtle.goto(0, 50)
         turtle.write("GAME OVER", align="center", font=("Arial", 32, "bold"))
-        self.screen.update()  # อัปเดตหน้าจอให้แสดงข้อความ
+
+        # แสดงสรุปคะแนน
+        turtle.color("white")
+        turtle.goto(0, 0)
+        turtle.write(f"Final Score: {self.score}", align="center", font=("Arial", 20, "bold"))
+        turtle.goto(0, -40)
+        turtle.write(f"Fuel Collected: {self.fuel_score}", align="center", font=("Arial", 20, "bold"))
+
+        # แสดงปุ่มสำหรับ Restart หรือ Quit
+        turtle.goto(0, -80)
+        turtle.write("Press 'S' to Restart or 'Q' to Quit", align="center", font=("Arial", 16, "bold"))
+        self.screen.update()
+
+        # รอการกดปุ่ม Restart หรือ Quit
+        self.screen.listen()
+        self.screen.onkeypress(self.reset_game, "s")  # กด S เพื่อเริ่มใหม่
+        self.screen.onkeypress(self.screen.bye, "q")  # กด Q เพื่อออกจากเกม
 
     def run(self):
-        """ลูปหลักของเกม"""
         while self.running:
             turtle.clear()
 
             # วาด Spaceship
             self.spaceship.turtle.goto(self.spaceship.x, self.spaceship.y)
 
-            # วาด Asteroids
+            # วาดอุกกาบาต
             for asteroid in self.asteroids:
                 asteroid.move()
                 asteroid.draw()
 
-            # วาด Fuel
+            # วาดน้ำมัน
             self.fuel.draw()
 
-            # ตรวจสอบการชนของยานกับน้ำมัน
+            # ตรวจสอบการชน
             self.check_fuel_collision()
-
-            # ตรวจสอบการชนของยานกับอุกกาบาต
             if self.check_collision():
-                self.spaceship.turtle.hideturtle()  # ซ่อนยานเมื่อชน
                 self.running = False
-                break  # ออกจากลูปทันทีเมื่อเกมจบ
+                break
 
             # เพิ่มคะแนน
             self.score += 1
+            if self.score % 50 == 0:
+                self.level += 1
+                for asteroid in self.asteroids:
+                    asteroid.vy *= 1.05
 
-            # เพิ่มระดับความยาก
-            if self.score > 0 and self.score % 50 == 0:
-                if self.level < (self.score // 50) + 1:  # เพิ่มเลเวลแค่ครั้งเดียวต่อ 50 คะแนน
-                    self.level += 1
-                    for asteroid in self.asteroids:
-                        asteroid.vy *= 1.05
-
-            # แสดงคะแนน
             self.display_score()
-
-            # อัปเดตหน้าจอ
             self.screen.update()
-            time.sleep(0.02)
+            time.sleep(0.01)
 
-        # แสดงข้อความจบเกม
         self.game_over()
-        self.screen.mainloop()
+
 
 if __name__ == "__main__":
     game = Game(10)
-    game.run()
+    while True:
+        game.main_menu()
+        game.screen.mainloop()
