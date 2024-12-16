@@ -38,11 +38,10 @@ Ensure you have:
    ```bash
    git clone https://github.com/txcy/final_project_spaceship_dogde_game.git
    cd Spaceship_Dodge_Game
+   
 2. Run the game:
    ```bash
    python run_ball.py
-
-
 Usage
 --------------
 How to Play
@@ -65,33 +64,7 @@ Press Q to quit.
 4.Game Over:
 - **The game ends if the spaceship collides with an asteroid.
 - **Press S to restart or Q to quit.
-
-Project Design and Implementation
-UML Class Diagram
---------
-+--------------------+       +------------------+       +------------------+
-|       Game         |<----> |    Spaceship     |       |     Asteroid     |
-|--------------------|       |------------------|       |------------------|
-| - screen           |       | - size           |       | - size           |
-| - spaceship        |       | - x, y           |       | - x, y           |
-| - asteroids        |       | - turtle         |       | - vx, vy         |
-| - fuel             |       |------------------|       | - color          |
-| - score, level     |       | + move()         |       |------------------|
-| - fuel_score       |       | + draw()         |       | + move()         |
-|--------------------|       +------------------+       | + draw()         |
-| + main_menu()      |                                  +------------------+
-| + run()            |               +------------------+
-| + check_collision()|<------------->|      Fuel         |
-| + game_over()      |               |------------------|
-+--------------------+               | - size           |
-                                     | - x, y           |
-                                     | - color          |
-                                     |------------------|
-                                     | + draw()         |
-                                     | + relocate()     |
-                                     +------------------+
-
-                                     
+ 
 Class Descriptions
 ---------------
 1.Game:
@@ -141,3 +114,35 @@ Thanakrit BUNGSRI
 GitHub: https://github.com/txcy
 Contact: thanakrit.bung@ku.th
 
+Project Design and Implementation
+UML Class Diagram: and Project Directory Structure:
+  ```bash
++-------------------+       +-------------------+       +-------------------+       +-------------------+
+|       Game        |<----->|     Spaceship     |       |     Asteroid      |       |       Fuel        |
+|-------------------|       |-------------------|       |-------------------|       |-------------------|
+| - screen          |       | - size            |       | - size            |       | - size            |
+| - spaceship       |       | - x, y            |       | - x, y            |       | - x, y            |
+| - asteroids       |       | - turtle          |       | - vx, vy          |       | - color           |
+| - fuel            |       |-------------------|       | - color           |       |-------------------|
+| - score, level    |       | + move()          |       |-------------------|       | + draw()          |
+| - fuel_score      |       | + draw()          |       | + move()          |       | + relocate()      |
+|-------------------|       +-------------------+       | + draw()          |       +-------------------+
+| + main_menu()     |                                   +-------------------+                            
+| + run()           |                                                                                   
+| + check_collision()|                                                                                   
+| + game_over()     |                                                                                   
++-------------------+
+
+
+
+Spaceship_Dodge_Game/
+├── ball.py           # Class for Asteroids
+├── fuel.py           # Class for Fuel
+├── paddle.py         # Class for Spaceship
+├── run_ball.py       # Main game script
+├── my_event.py       # Optional Event class
+└── assets/
+    ├── galaxy.gif       # Background image
+    ├── spaceship.gif    # Spaceship image
+    ├── fuel.gif         # Fuel icon image
+    └── game_over.gif    # Optional Game Over image
