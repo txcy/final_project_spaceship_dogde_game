@@ -70,11 +70,14 @@ Class Descriptions
 1.Game:
 Handles game states, user input, and the main game loop.
 - **Manages interactions between the spaceship, asteroids, and fuel.
+  
 2.Spaceship:
 - **Allows the player to control the spaceship's movement on the screen.
+  
 3.Asteroid:
 - **Represents falling obstacles that the player must avoid.
 - **Resets position when moving off-screen.
+  
 4.Fuel:
 - **Represents collectible objects that give bonus points.
 - **Relocates to a random position when collected.
