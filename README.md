@@ -1,108 +1,143 @@
+# **Spaceship Dodge Game**
+
+## **Project Title**
+**Spaceship Dodge Game**  
+A survival game where players control a spaceship to dodge falling asteroids and collect fuel for bonus points.
 
 ---
 
-## 🎮 How to Play
+## **Project Description**
 
-1. **Objective**: Dodge the asteroids, collect fuel, and survive as long as possible.
-2. **Controls**:
-    - `Arrow Up` : Move the spaceship up
-    - `Arrow Down` : Move the spaceship down
-    - `Arrow Left` : Move the spaceship left
-    - `Arrow Right` : Move the spaceship right
-3. **Scoring**:
-    - Score increases over time as you survive.
-    - Collect fuel to earn bonus points.
-4. **Game Over**:
-    - Collision with asteroids ends the game.
-    - Your final score, fuel collected, and level will be displayed.
+The **Spaceship Dodge Game** is a Python-based arcade game using the `turtle` module. Players navigate a spaceship to avoid asteroids and collect fuel. The game features dynamic difficulty levels, a scoring system, and interactive menus for starting, restarting, and exiting the game.
 
 ---
 
-## 🛠 Installation
+## **Key Features**
 
-1. Clone this repository to your local machine:
-    ```bash
-    git clone https://github.com/txcy/final_project_spaceship_dogde_game.git
-    ```
-
-2. Install Python (version 3.8 or higher recommended) if not already installed.
-
-3. Navigate to the project directory:
-    ```bash
-    cd Spaceship_Dodge_Game
-    ```
-
-4. Run the game:
-    ```bash
-    python run_ball.py
-    ```
+- **Spaceship Movement**: Navigate using arrow keys (`Up`, `Down`, `Left`, `Right`).
+- **Asteroid Avoidance**: Dodge falling asteroids that increase in speed as you level up.
+- **Fuel Collection**: Collect fuel for bonus points.
+- **Dynamic Difficulty**: Asteroids fall faster as levels progress.
+- **Game States**:
+  - **Main Menu**: Start or exit the game.
+  - **Gameplay**: Real-time interaction with asteroids and fuel.
+  - **Game Over**: View final scores with options to restart or quit.
+- **Score Tracking**: Display of current score, collected fuel, and current level.
 
 ---
 
-## 🎨 Game Assets
+## **How to Install and Run the Project**
 
-- **Background**: `galaxy.gif`
-- **Spaceship**: `spaceship.gif`
-- **Fuel**: `fuel.gif`
-- **Game Over Screen**: `game_over.gif`
+### **1. Prerequisites**
+Ensure you have:
+- Python 3.8 or higher installed.
 
-Ensure all assets are located in the `assets/` folder.
+### **2. Steps to Run the Project**
 
----
-
-## 🚀 Features
-
-1. **Dynamic Gameplay**:
-   - Asteroids fall from the top.
-   - Spaceship can move in all directions.
-2. **Fuel Collection**:
-   - Collect fuel to increase score.
-3. **Level Progression**:
-   - Levels increase automatically as you survive longer.
-4. **Game Over Screen**:
-   - Shows final score, fuel collected, and level reached.
-5. **Restart Functionality**:
-   - Restart the game by pressing `S` or quit with `Q`.
-
----
-
-## 🧩 Future Improvements
-
-- Adding sound effects.
-- Increasing difficulty with power-ups or new obstacles.
-- Optimizing performance for better frame rates.
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository.
-2. Create a new branch:
-    ```bash
-    git checkout -b feature-name
-    ```
-3. Commit changes:
-    ```bash
-    git commit -m "Add new feature"
-    ```
-4. Push to the branch:
-    ```bash
-    git push origin feature-name
-    ```
-5. Open a pull request.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/txcy/final_project_spaceship_dogde_game.git
+   cd Spaceship_Dodge_Game
+2. Run the game:
+   ```bash
+   python run_ball.py
 
 
----
+Usage
+--------------
+How to Play
 
-## 🙌 Acknowledgments
+1.Start the Game:
+Press S to start the game from the Main Menu.
+Press Q to quit.
 
-Special thanks to all contributors and the Python community for providing inspiration and resources.
+2.Controls:
+- **Arrow Up: Move spaceship up.
+- **Arrow Down: Move spaceship down.
+- **Arrow Left: Move spaceship left.
+- **Arrow Right: Move spaceship right.
+  
+3.Objective:
+- **Avoid falling asteroids.
+- **Collect yellow fuel dots to increase your fuel score.
+- **Survive as long as possible to reach higher levels.
+  
+4.Game Over:
+- **The game ends if the spaceship collides with an asteroid.
+- **Press S to restart or Q to quit.
 
+Project Design and Implementation
+UML Class Diagram
+--------
++--------------------+       +------------------+       +------------------+
+|       Game         |<----> |    Spaceship     |       |     Asteroid     |
+|--------------------|       |------------------|       |------------------|
+| - screen           |       | - size           |       | - size           |
+| - spaceship        |       | - x, y           |       | - x, y           |
+| - asteroids        |       | - turtle         |       | - vx, vy         |
+| - fuel             |       |------------------|       | - color          |
+| - score, level     |       | + move()         |       |------------------|
+| - fuel_score       |       | + draw()         |       | + move()         |
+|--------------------|       +------------------+       | + draw()         |
+| + main_menu()      |                                  +------------------+
+| + run()            |               +------------------+
+| + check_collision()|<------------->|      Fuel         |
+| + game_over()      |               |------------------|
++--------------------+               | - size           |
+                                     | - x, y           |
+                                     | - color          |
+                                     |------------------|
+                                     | + draw()         |
+                                     | + relocate()     |
+                                     +------------------+
 
+                                     
+Class Descriptions
+---------------
+1.Game:
+Handles game states, user input, and the main game loop.
+- **Manages interactions between the spaceship, asteroids, and fuel.
+2.Spaceship:
+- **Allows the player to control the spaceship's movement on the screen.
+3.Asteroid:
+- **Represents falling obstacles that the player must avoid.
+- **Resets position when moving off-screen.
+4.Fuel:
+- **Represents collectible objects that give bonus points.
+- **Relocates to a random position when collected.
 
-👨‍💻 Developer
--------------------------------------
-Name: Thanakrit BUNGSRI
-Email: thanakrit.bung@ku.th
+Testing and Debugging
+-------------
+Testing Scenarios
+
+1.Game Start:
+- **Main Menu functions correctly.
+- **Game starts upon pressing S.
+
+2.Gameplay:
+- **Asteroids fall continuously.
+- **Fuel relocates after collection.
+- **Collision detection with asteroids ends the game.
+  
+3.Game Over:
+- **Scores are displayed correctly.
+- **Restarting or quitting works as expected.
+
+Known Issues
+-------
+No major bugs detected; the game works as intended.
+
+Demo
+----------
+View a full demo of the project in this https://youtu.be/Aaxm28qSstc?si=bLOpxIxh9bSJc8Xb .
+
+Project Status
+----------
+The project is fully implemented and functional, including all key features and menus.
+
+Contributors
+----------
+Thanakrit BUNGSRI
 GitHub: https://github.com/txcy
+Contact: thanakrit.bung@ku.th
 
