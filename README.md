@@ -103,7 +103,7 @@ No major bugs detected; the game works as intended.
 Demo
 ----------
 View a full demo of the project in this https://youtu.be/Aaxm28qSstc?si=bLOpxIxh9bSJc8Xb .
-
+and full code part: https://youtu.be/VyD8sHtp540?si=ODVV30xWDWI9mdzM
 Project Status
 ----------
 The project is fully implemented and functional, including all key features and menus.
